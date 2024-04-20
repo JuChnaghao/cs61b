@@ -65,6 +65,8 @@ public class ArrayDeque<T>
         start = minusone(start, length);
         memory[start] = item;
         size += 1;
+        if(size==1)
+            top = start;
     }
     public void addLast(T item)
     {
@@ -75,6 +77,8 @@ public class ArrayDeque<T>
         top = plusone(top, length);
         memory[top] = item;
         size += 1;
+        if(size ==0)
+            start = top;
     }
     public boolean isEmpty()
     {
@@ -93,6 +97,8 @@ public class ArrayDeque<T>
     }
     public T removeFirst()
     {
+        if(size ==0)
+            return null;
         T result = memory[start];
         memory[start] = null;
         start = plusone(start, length);
@@ -105,6 +111,8 @@ public class ArrayDeque<T>
     }
     public T removeLast()
     {
+        if(size == 0)
+            return null;
         T result = memory[top];
         memory[top] = null;
         top = minusone(top, length);
