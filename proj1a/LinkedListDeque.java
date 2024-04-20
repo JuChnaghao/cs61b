@@ -70,6 +70,7 @@ public class LinkedListDeque<T>
         {
             size-=1;
             T temp = (T) sentinel.next.item;
+            sentinel.next.next.last = sentinel;
             sentinel.next=sentinel.next.next;
             return temp;
         }
@@ -84,6 +85,7 @@ public class LinkedListDeque<T>
         {
             size-=1;
             T temp = (T) sentinel.last.item;
+            sentinel.last.last.next = sentinel;
             sentinel.last=sentinel.last.last;
             return temp;
         }
@@ -98,8 +100,20 @@ public class LinkedListDeque<T>
         }
         return (T) p.item;
     }
+    private T getRecursiveHelper(int index, Node p)
+    {
+        if(index == 0)
+            return (T) p.item;
+        else
+            return getRecursiveHelper(index - 1, p.next);
+    }
     public T getRecursive(int index)
     {
-        return get(index);
+        if(index >= size)
+            return null;
+        else
+        {
+            return getRecursiveHelper(index, sentinel.next);
+        }
     }
 }
