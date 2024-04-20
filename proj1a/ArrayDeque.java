@@ -1,5 +1,3 @@
-import java.lang.foreign.SymbolLookup;
-
 public class ArrayDeque<T>
 {
     private int size;
