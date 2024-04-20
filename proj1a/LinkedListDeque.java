@@ -1,9 +1,12 @@
-public class LinkedListDeque<T> {
-    private static class Node<T>{
+public class LinkedListDeque<T>
+{
+    private static class Node<T>
+    {
         public T item;
         public Node next;
         public Node last;
-        public Node(T i, Node n, Node l){
+        public Node(T i, Node n, Node l)
+        {
             item = i;
             next = n;
             last = l;
@@ -95,6 +98,8 @@ public class LinkedListDeque<T> {
         }
         return (T) p.item;
     }
-
-
+    public T getRecursive(int index)
+    {
+        return get(index);
+    }
 }
