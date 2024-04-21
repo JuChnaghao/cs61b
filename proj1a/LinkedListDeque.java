@@ -21,6 +21,7 @@ public class LinkedListDeque<T>
         sentinel.last = sentinel;
         size=0;
     }
+
     public void addFirst(T item)
     {
         size+=1;
@@ -30,6 +31,7 @@ public class LinkedListDeque<T>
         sentinel.next = temp;
         temp.last = sentinel;
     }
+
     public void addLast(T item)
     {
         size+=1;
@@ -39,6 +41,7 @@ public class LinkedListDeque<T>
         sentinel.last = temp;
         temp.next = sentinel;
     }
+
     public boolean isEmpty()
     {
         if(size == 0)
@@ -47,10 +50,12 @@ public class LinkedListDeque<T>
         }
         return false;
     }
+
     public int size()
     {
         return size;
     }
+
     public void printDeque()
     {
         Node p = sentinel.next;
@@ -60,6 +65,7 @@ public class LinkedListDeque<T>
             p = p.next;
         }
     }
+
     public T removeFirst()
     {
         if(size == 0)
@@ -75,6 +81,7 @@ public class LinkedListDeque<T>
             return temp;
         }
     }
+
     public T removeLast()
     {
         if(size == 0)
@@ -90,6 +97,7 @@ public class LinkedListDeque<T>
             return temp;
         }
     }
+
     public T get(int index)
     {
         Node p = sentinel;
