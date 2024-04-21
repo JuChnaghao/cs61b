@@ -1,141 +1,179 @@
-public class ArrayDeque<T>
-{
+/** second part of project1A.
+ * deque implemented by array
+ * @author FlyingPig
+ */
+public class ArrayDeque<T> implements Deque<T> {
+
+    /** array to save data.*/
+    private T[] array;
+    /** size of the deque. */
     private int size;
-    private int start,top;
-    private T[] memory ;
+
+    /** size of the array. */
     private int length;
-    public ArrayDeque()
-    {
-        length = 8;
+
+    /** front index. */
+    private int front;
+
+    /** last index. */
+    private int last;
+
+    /** constructor for ArrayDeque. */
+    public ArrayDeque() {
+        array = (T[]) new Object[8];
         size = 0;
-        start = 1;
-        top = 0;
-        memory = (T[]) new Object[8];
-    }
-    private int plusone(int index, int length)
-    {
-        if (index + 1 == length)
-            return 0;
-        return index + 1;
-    }
-    private int minusone(int index, int length)
-    {
-        if (index == 0)
-            return length - 1;
-        return index - 1;
-    }
-    private void grow()
-    {
-        int index1 = 0;
-        int index2 = start;
-        T[] newarray = (T[]) new Object[length * 2];
-        for (int i = 0; i < size; i++)
-        {
-            newarray[index1] = memory[index2];
-            index1 = plusone(index1, 2 * length);
-            index2 = plusone(index2, length);
-        }
-        start = 0;
-        top = minusone(index1, 2 * length);
-        length *= 2;
-        memory = newarray;
-    }
-    private void shrink()
-    {
-        int index1 = 0;
-        int index2 = start;
-        T[] newarray = (T[]) new Object[length / 2];
-        for (int i = 0; i < size; i++)
-        {
-            newarray[index1] = memory[index2];
-            index1 = plusone(index1, length / 2);
-            index2 = plusone(index2, length);
-        }
-        start = 0;
-        top = minusone(index1, length / 2);
-        length /= 2;
-        memory = newarray;
-    }
-    public void addFirst(T item)
-    {
-        if(size == length)
-        {
-            grow();
-        }
-        start = minusone(start, length);
-        memory[start] = item;
-        size += 1;
-        if(size==1)
-            top = start;
-    }
-    public void addLast(T item)
-    {
-        if(size == length)
-        {
-            grow();
-        }
-        top = plusone(top, length);
-        memory[top] = item;
-        size += 1;
-        if(size ==0)
-            start = top;
+        length = 8;
+        front = 4;
+        last = 4;
     }
 
-    public boolean isEmpty()
-    {
+    /** decide if the deque is empty.
+     * @return true if the deque is empty, vice versa.
+     */
+    @Override
+    public boolean isEmpty() {
         return size == 0;
     }
 
-    public int size()
-    {
+    /** return the size of the deque. */
+    @Override
+    public int size() {
         return size;
     }
 
-    public void printDeque()
-    {
-        for(int i = start; i != plusone(top, length); i = plusone(i, length))
-        {
-            System.out.print(memory[i] + " ");
+    /** return the "index - 1".
+     * @param index index
+     */
+    private int minusOne(int index) {
+        if (index == 0) {
+            return length - 1;
         }
+        return index - 1;
     }
 
-    public T removeFirst()
-    {
-        if(size ==0)
-            return null;
-        T result = memory[start];
-        memory[start] = null;
-        start = plusone(start, length);
-        size -= 1;
-        if(size*4 < length && length>=16)
-        {
+    /** return the "index + 1".
+     * @param index index
+     */
+    private int plusOne(int index, int module) {
+        index %= module;
+        if (index == module - 1) {
+            return 0;
+        }
+        return index + 1;
+    }
+
+    private void grow() {
+        T[] newArray = (T[]) new Object[length * 2];
+        int ptr1 = front;
+        int ptr2 = length;
+        while (ptr1 != last) {
+            newArray[ptr2] = array[ptr1];
+            ptr1 = plusOne(ptr1, length);
+            ptr2 = plusOne(ptr2, length * 2);
+        }
+        front = length;
+        last = ptr2;
+        array = newArray;
+        length *= 2;
+    }
+
+    private void shrink() {
+        T[] newArray = (T[]) new Object[length / 2];
+        int ptr1 = front;
+        int ptr2 = length / 4;
+        while (ptr1 != last) {
+            newArray[ptr2] = array[ptr1];
+            ptr1 = plusOne(ptr1, length);
+            ptr2 = plusOne(ptr2, length / 2);
+        }
+        front = length / 4;
+        last = ptr2;
+        array = newArray;
+        length /= 2;
+    }
+
+    /** add one item at the front of the deque.
+     * @param item the item we want to add
+     */
+    @Override
+    public void addFirst(T item) {
+        if (size == length - 1) {
+            grow();
+        }
+        front = minusOne(front);
+        array[front] = item;
+        size++;
+    }
+
+    /** add one item at the end of the deque.
+     * @param item item we want to add
+     */
+    @Override
+    public void addLast(T item) {
+        if (size == length - 1) {
+            grow();
+        }
+        array[last] = item;
+        last = plusOne(last, length);
+        size++;
+    }
+
+    /** remove the first item.
+     * @return the removed first item
+     */
+    @Override
+    public T removeFirst() {
+        if (length >= 16 && length / size >= 4) {
             shrink();
         }
-        return result;
+        if (size == 0) {
+            return null;
+        }
+        T ret = array[front];
+        front = plusOne(front, length);
+        size--;
+        return ret;
     }
 
-    public T removeLast()
-    {
-        if(size == 0)
-            return null;
-        T result = memory[top];
-        memory[top] = null;
-        top = minusone(top, length);
-        size -= 1;
-        if(size*4 < length && length>=16)
-        {
+    /** remove the last item.
+     * @return the removed last item
+     */
+    @Override
+    public T removeLast() {
+        if (length >= 16 && length / size >= 4) {
             shrink();
         }
-        return result;
+        if (size == 0) {
+            return null;
+        }
+        last = minusOne(last);
+        size--;
+        return array[last];
     }
 
-    public T get(int index)
-    {
-        if(index >= size)
+    /** return the item indexed at index.
+     * @param index index
+     */
+    @Override
+    public T get(int index) {
+        if (index >= size) {
             return null;
-        else
-        {
-           return memory[(start+index)%length];
+        }
+        int ptr = front;
+        for (int i = 0; i < index; i++) {
+            ptr = plusOne(ptr, length);
+        }
+        return array[ptr];
+    }
+
+    /** print the entire deque from front to end. */
+    @Override
+    public void printDeque() {
+        int ptr = front;
+        while (ptr != last) {
+            System.out.print(array[ptr] + " ");
+            ptr = plusOne(ptr, length);
         }
     }
+
 }
