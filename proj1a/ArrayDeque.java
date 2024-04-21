@@ -1,4 +1,4 @@
-public class ArrayDeque<T>
+public class ArrayDeque<T> implements Deque<T>
 {
     private int size;
     private int start,top;
@@ -56,6 +56,7 @@ public class ArrayDeque<T>
         length /= 2;
         memory = newarray;
     }
+    @Override
     public void addFirst(T item)
     {
         if(size == length)
@@ -68,11 +69,12 @@ public class ArrayDeque<T>
         if(size==1)
             top = start;
     }
+    @Override
     public void addLast(T item)
     {
         if(size == length)
         {
-            shrink();
+            grow();
         }
         top = plusone(top, length);
         memory[top] = item;
@@ -80,14 +82,17 @@ public class ArrayDeque<T>
         if(size ==0)
             start = top;
     }
+    @Override
     public boolean isEmpty()
     {
         return size == 0;
     }
+    @Override
     public int size()
     {
         return size;
     }
+    @Override
     public void printDeque()
     {
         for(int i = start; i != plusone(top, length); i = plusone(i, length))
@@ -95,6 +100,7 @@ public class ArrayDeque<T>
             System.out.print(memory[i] + " ");
         }
     }
+    @Override
     public T removeFirst()
     {
         if(size ==0)
@@ -103,12 +109,13 @@ public class ArrayDeque<T>
         memory[start] = null;
         start = plusone(start, length);
         size -= 1;
-        if(size*4 < length)
+        if(size*4 < length && length>=16)
         {
             shrink();
         }
         return result;
     }
+    @Override
     public T removeLast()
     {
         if(size == 0)
@@ -117,12 +124,13 @@ public class ArrayDeque<T>
         memory[top] = null;
         top = minusone(top, length);
         size -= 1;
-        if(size*4 < length)
+        if(size*4 < length && length>=16)
         {
             shrink();
         }
         return result;
     }
+    @Override
     public T get(int index)
     {
         if(index >= size)
