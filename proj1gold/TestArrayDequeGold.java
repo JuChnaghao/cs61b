@@ -15,13 +15,13 @@ public class TestArrayDequeGold {
                 l1.addFirst(x);
                 l2.addFirst(x);
                 size++;
-                operations += String.format("addLast(%d)\n",x);
+                operations += String.format("addFirst(%d)\n",x);
             } else if (numberBetweenZeroAndFour < 2) {
                 Integer x = StdRandom.uniform(num);
                 l1.addLast(x);
                 l2.addLast(x);
                 size++;
-                operations += String.format("addFirst(%d)\n",x);
+                operations += String.format("addLast(%d)\n",x);
             } else if (numberBetweenZeroAndFour < 3) {
                 if(size != 0){
                     operations += "removefirst()\n";
